@@ -1,0 +1,158 @@
+#include "stdafx.h"
+#include "Network.h"
+
+
+SceneManager* sceneManagerForNetwork;
+
+DWORD WINAPI Network::RecieveProcess(LPVOID param)
+{
+	ClientType* clientData = (ClientType*)param;
+
+
+	int signal = 0;
+	while (true)
+	{
+		
+		int retval = recvn(clientData->socket, (char*)&signal, sizeof(signal), 0);
+		signal = ntohl(signal);
+		PrintSignal(signal);
+		if (retval == SOCKET_ERROR)
+		{
+			printf("spawn recv socket error\n");
+			break;
+		}
+		else if (retval == 0)
+			continue;
+		else
+		{
+			Network::DispatchSignal(signal,clientData);
+		}
+	}
+
+	return 0;
+}
+
+void Network::DispatchSignal(const int signal, ClientType* clientData)
+{
+	switch (signal)
+	{
+	case SIGNAL_SPAWN:
+		Network::ReceiveSpawnData(clientData);
+		break;
+
+	}
+}
+
+void Network::ReceiveSpawnData(ClientType* clientData)
+{
+
+	SpawnData data;
+	ZeroMemory(&data, sizeof(data));
+	while (true)
+	{
+		int retval = recvn(clientData->socket, (char*)&data, sizeof(data), 0);
+		if (retval == SOCKET_ERROR)
+		{
+			printf("spawn recv socket error\n");
+			break;
+		}
+		else if (retval == 0)
+			continue;
+		else
+		{
+			sceneManagerForNetwork->NetworkAddObject(data);
+			break;
+		}
+	}
+}
+
+Network::Network()
+{
+
+}
+
+Network::~Network()
+{
+	closesocket(mClientData.socket);
+	WSACleanup();
+
+}
+
+bool Network::Initialize(SceneManager* sceneManager)
+{
+	sceneManagerForNetwork = sceneManager;
+
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+		return false;
+
+	//////NETWORK
+
+	mServerAddr.sin_family = AF_INET;
+	mServerAddr.sin_port = htons(9000);
+	mServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+
+	mClientData.socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (mClientData.socket == INVALID_SOCKET)
+	{
+		return false;
+	}
+
+	int retval = connect(mClientData.socket, (SOCKADDR*)&mServerAddr, sizeof(mServerAddr));
+	if (retval == SOCKET_ERROR)
+	{
+		closesocket(mClientData.socket);
+		mClientData.socket = INVALID_SOCKET;
+		return false;
+	}
+	mThread = CreateThread(NULL, NULL, RecieveProcess, (LPVOID)&mClientData, NULL, NULL);
+
+	return true;
+}
+
+
+
+void Network::SendSpawnData(SpawnData& data)
+{
+	int signal = htonl(SIGNAL_SPAWN);
+	int retval = 0;
+
+	retval = send(mClientData.socket, (char*)&signal, sizeof(signal), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn send socket error\n");
+		return;
+	}
+
+	send(mClientData.socket, (char*)&data, sizeof(SpawnData), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn send socket error\n");
+		return;
+	}
+
+	return;
+}
+
+void Network::SendExitData(int score)
+{
+	int signal = htonl(SIGNAL_EXIT);
+	int retval = 0;
+
+	retval = send(mClientData.socket, (char*)&signal, sizeof(signal), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn send socket error\n");
+		return;
+	}
+	send(mClientData.socket, (char*)&score, sizeof(score), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn send socket error\n");
+		return;
+	}
+
+}
+
+
