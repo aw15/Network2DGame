@@ -12,7 +12,7 @@ public:
 	void Damage(const float amount);
 	void SetPosition(float x, float y, float z) { mPosition.x = x; mPosition.y = y; mPosition.z = z;}
 	void SetSize(const float size) { mSize = size; }
-	void Force(float x, float y) { mForce.x = x; mForce.y = y; }
+	void Force(float x, float y) { mForce.x += x; mForce.y += y; }
 	//-------------------------------GET-----------------------------------------------------------
 	float GetDamageCoolTime() { return mDamageCoolTime; }
 	Transform* GetCollider();
@@ -29,11 +29,12 @@ private:
 	Transform mCollider[2];
 	float mSpeed = 0;
 	Transform mForce = { 0,0,0 };
-
+	float mMass = 10.0f;
+	Transform mVel = { 0,0,0 };//x속도, y속도
 
 	Color mColor = {1,1,1,1};
 	float mSize = 50.0f;
-	float mLevel = 0.3;
+	float mLevel = 0.3f;
 
 
 };

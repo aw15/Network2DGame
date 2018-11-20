@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SceneManager.h"
+#include "GameScene.h"
 
 
 
@@ -13,62 +13,68 @@ bool BoxCollision(Transform* standard, Transform* target)
 	return (isX&&isY);
 }
 
-SceneManager::SceneManager(const int side, Network* network)
+GameScene::GameScene(Renderer* renderer , Network* network)
 {
 	mNetwork = network;
 
-	PrintTeam(side);
+	mRenderer = renderer;
 
-	mSide = side;
-	mRenderer = new Renderer(WIDTH, HEIGHT);
-	if (!mRenderer->IsInitialized())
-	{
-		std::cout << "Renderer could not be initialized.. \n";
-	}
-	mAllyList.reserve(100);
+	mAllyList.reserve(20);
+	mEnemyList.reserve(20);
 	mPrevTime = Time::now();
 
+
+
+	mRenderer->CreatePngTexture("./Resource/background.png","BackGround");//배경
+	mRenderer->CreatePngTexture("./Resource/charater.png","Archer");//캐릭
+	mRenderer->CreatePngTexture("./Resource/Warrior.png","Warrior");//전사
+	mRenderer->CreatePngTexture("./Resource/Mage.png","Mage");//마법사
+
+
+	mRenderer->CreatePngTexture("./Resource/snow.png","Snow");//눈
+	mRenderer->CreatePngTexture("./Resource/flare.png","Particle1");//파티클
+	mRenderer->CreatePngTexture("./Resource/flare2.png","Particle2");//파티클
+
+
+
+	mSound = new Sound();
+	auto soundBG = mSound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
+	mSound->PlaySound(soundBG, true, 0.2f);
+}
+
+
+GameScene::~GameScene()
+{
+	CleanUp();
+}
+
+bool GameScene::Initialize()
+{
 	mPlayer = new Player(mRenderer);
 
 	mEnemy = new Player(mRenderer);
+
 
 
 	if (mSide == BLUE_TEAM)
 	{
 		mPlayer->SetPosition(0, -200, 0);
 		mEnemy->SetPosition(0, 200, 0);
+		mRenderer->CreatePngTexture("./Resource/small2.png", "Player");
+		mRenderer->CreatePngTexture("./Resource/small1.png", "Enemy");//건물
 	}
 	else if (mSide == RED_TEAM)
 	{
 		mPlayer->SetPosition(0, 200, 0);
 		mEnemy->SetPosition(0, -200, 0);
+		mRenderer->CreatePngTexture("./Resource/small2.png", "Enemy");
+		mRenderer->CreatePngTexture("./Resource/small1.png", "Player");//건물
 	}
-	
 
-	mTexture[TEX_BUILDING1] = mRenderer->CreatePngTexture("./Resource/small2.png");
-	mTexture[TEX_BUILDING2] = mRenderer->CreatePngTexture("./Resource/small1.png");//건물
-	mTexture[TEX_BACKGROUND] = mRenderer->CreatePngTexture("./Resource/background.png");//배경
-	mTexture[TEX_ARCHER] = mRenderer->CreatePngTexture("./Resource/charater.png");//캐릭
-	mTexture[TEX_WARRIOR] = mRenderer->CreatePngTexture("./Resource/Warrior.png");//전사
-	mTexture[TEX_MAGE] = mRenderer->CreatePngTexture("./Resource/Mage.png");//마법사
-
-
-	mTexture[TEX_SNOW] = mRenderer->CreatePngTexture("./Resource/snow.png");//눈
-	mTexture[TEX_PARTICLE1] = mRenderer->CreatePngTexture("./Resource/flare.png");//파티클
-	mTexture[TEX_PARTICLE2] = mRenderer->CreatePngTexture("./Resource/flare2.png");//파티클
-	mSound = new Sound();
-	
-	auto soundBG = mSound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
-	mSound->PlaySound(soundBG, true, 0.2f);
+	return true;
 }
 
-
-SceneManager::~SceneManager()
-{
-	delete mRenderer;
-}
-
-void SceneManager::AddObject(float x, float y)
+void GameScene::AddObject(float x, float y)
 {
 	bool spawnCondition = false;
 	if (mSide == BLUE_TEAM)
@@ -111,7 +117,7 @@ void SceneManager::AddObject(float x, float y)
 	}
 }
 
-void SceneManager::NetworkAddObject(const SpawnData& spawnData)
+void GameScene::NetworkAddObject(const SpawnData& spawnData)
 {
 
 	Transform newPos = { spawnData.x,spawnData.y,0 };
@@ -129,17 +135,20 @@ void SceneManager::NetworkAddObject(const SpawnData& spawnData)
 
 	if (spawnData.side == mSide)
 	{
-		printf("Allyspawn\n");
 		mAllyList.push_back(newObject);
 	}
 	else
 	{
-		printf("Enemyspawn\n");
 		mEnemyList.push_back(newObject);
 	}
 }
 
-void SceneManager::TestAddObject(float x, float y)
+void GameScene::NetworkMovePlayer(const MoveData & moveData)
+{
+	moveData.side == mSide ? mPlayer->Force(moveData.forceX, moveData.forceY) : mEnemy->Force(moveData.forceX, moveData.forceY);
+}
+
+void GameScene::TestAddObject(float x, float y)
 {
 	Transform newPos = { x, y,0 };
 	Object* newObject = nullptr;
@@ -151,7 +160,7 @@ void SceneManager::TestAddObject(float x, float y)
 
 
 
-void SceneManager::CollisionCheck()
+void GameScene::CollisionCheck()
 {
 	bool isCollide = false;
 
@@ -204,7 +213,7 @@ void SceneManager::CollisionCheck()
 	}
 }
 
-void SceneManager::EnemyBulletCheck(Object* object)
+void GameScene::EnemyBulletCheck(Object* object)
 {
 	bool isCollide = false;
 	for (auto& ally:mAllyList)
@@ -223,7 +232,7 @@ void SceneManager::EnemyBulletCheck(Object* object)
 	}
 }
 
-void SceneManager::AllyBulletCheck(Object* object)
+void GameScene::AllyBulletCheck(Object* object)
 {
 	bool isCollide = false;
 
@@ -243,7 +252,7 @@ void SceneManager::AllyBulletCheck(Object* object)
 	}
 }
 
-void SceneManager::Update()
+void GameScene::Update()
 {	
 	//시간계산---------------------------------------------------
 	TimePoint currTime = Time::now();
@@ -253,8 +262,7 @@ void SceneManager::Update()
 	//	m_soundTime += elapsedTime;//소리가 계속 나면 안되니까 쿨타임
 	mSpawnTime += elapsedTime;//유닛 생성을 위한 쿨타임
 
-
-	if (mTimeAccumulator > TIME_FREQUENCY)
+	while (mTimeAccumulator > TIME_FREQUENCY)
 	{
 		for (auto object : mAllyList)
 		{
@@ -271,42 +279,45 @@ void SceneManager::Update()
 
 		mTimeAccumulator -= TIME_FREQUENCY;
 		CollisionCheck();
-		Delete();//죽은 애들 지우기
+		DeleteDeadObject();//죽은 애들 지우기
+
+		auto state = GetState();
+		if (state == STATE::win || state == STATE::lose)
+		{
+			mNetwork->SendExitData(mScore,mPlayerName);
+		}
 	}
 }
 
-void SceneManager::Render()
+void GameScene::Render()
 {
-	mRenderer->DrawTexturedRect(0, 0, 0, 1000, 1, 1, 1, 1, mTexture[TEX_BACKGROUND], 0.9f);
+	mRenderer->DrawTexturedRect(0, 0, 0, 1000, 1, 1, 1, 1, mRenderer->GetTexture("BackGround"), 0.9f);
 	for (auto data : mAllyList)
 	{
 		if (data->GetType() == OBJECT_ARCHER)
-			data->Render(mTexture[TEX_ARCHER], mTexture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Archer"), mRenderer->GetTexture("Particle1"));
 		else if (data->GetType() == OBJECT_WARRIOR)
-			data->Render(mTexture[TEX_WARRIOR], mTexture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Warrior"), mRenderer->GetTexture("Particle1"));
 		else if (data->GetType() == OBJECT_MAGE)
-			data->Render(mTexture[TEX_MAGE], mTexture[TEX_PARTICLE2]);
-		//else
-		//	data->RenderBullet(m_texture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Mage"), mRenderer->GetTexture("Particle2"));
 	}
 	for (auto data : mEnemyList)
 	{
 		if (data->GetType() == OBJECT_ARCHER)
-			data->Render(mTexture[TEX_ARCHER], mTexture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Archer"), mRenderer->GetTexture("Particle1"));
 		else if (data->GetType() == OBJECT_WARRIOR)
-			data->Render(mTexture[TEX_WARRIOR], mTexture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Warrior"), mRenderer->GetTexture("Particle1"));
 		else if (data->GetType() == OBJECT_MAGE)
-			data->Render(mTexture[TEX_MAGE], mTexture[TEX_PARTICLE2]);
-		//else
-		//	data->RenderBullet(m_texture[TEX_PARTICLE1]);
+			data->Render(mRenderer->GetTexture("Mage"), mRenderer->GetTexture("Particle2"));
 	}
 
-	mPlayer->Render(mTexture[TEX_BUILDING1]);
-	mEnemy->Render(mTexture[TEX_BUILDING2]);
+	mPlayer->Render(mRenderer->GetTexture("Player"));
+	mEnemy->Render(mRenderer->GetTexture("Enemy"));
+	
 	
 }
 
-void SceneManager::Delete()
+void GameScene::DeleteDeadObject()
 {
 	for (vector<Object*>::iterator iter = mAllyList.begin();iter!= mAllyList.end();)
 	{
@@ -358,7 +369,7 @@ void SceneManager::Delete()
 	}
 }
 
-STATE SceneManager::GetState()
+STATE GameScene::GetState()
 {
 	if (mPlayer->isDead)
 		return STATE::lose;
@@ -369,7 +380,7 @@ STATE SceneManager::GetState()
 }
 
 
-void SceneManager::CleanUp()
+void GameScene::CleanUp()
 {
 	for (auto iter = mAllyList.begin(); iter != mAllyList.end();)
 	{
@@ -387,31 +398,55 @@ void SceneManager::CleanUp()
 	delete mNetwork;
 }
 
-void SceneManager::KeyInput(unsigned char key)
+void GameScene::KeyInput(unsigned char key)
 {
-	if (key == 'c')
-	{
-		printf("ChatTest\n");
-	}
 	if (key == GLUT_KEY_UP)
 	{
-		mPlayer->Force(0, KEY_FORCE);
+		//mPlayer->Force(0, KEY_FORCE);
+		mNetwork->SendMoveData(MoveData{ mSide,0,KEY_FORCE });
 	}
-	if (key == GLUT_KEY_DOWN)
+	else if (key == GLUT_KEY_DOWN)
 	{
-		mPlayer->Force(0, -KEY_FORCE);
+		//mPlayer->Force(0, -KEY_FORCE);
+		mNetwork->SendMoveData(MoveData{ mSide, 0,-KEY_FORCE });
 	}
-	if (key == GLUT_KEY_RIGHT)
+	else if (key == GLUT_KEY_RIGHT)
 	{
-		mPlayer->Force(KEY_FORCE,0);
+		//mPlayer->Force(KEY_FORCE,0);
+		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE,0});
 	}
-	if (key == GLUT_KEY_LEFT)
+	else if (key == GLUT_KEY_LEFT)
 	{
-		mPlayer->Force(-KEY_FORCE, 0);
+		//mPlayer->Force(-KEY_FORCE, 0);
+		mNetwork->SendMoveData(MoveData{mSide, -KEY_FORCE,0 });
 	}
 }
 
-void SceneManager::MouseInput(int button, int state, int x, int y)
+void GameScene::KeyUpInput(unsigned char key)
+{
+	if (key == GLUT_KEY_UP)
+	{
+		//mPlayer->Force(0, -KEY_FORCE);
+		mNetwork->SendMoveData(MoveData{ mSide, 0, -KEY_FORCE });
+	}
+	else if (key == GLUT_KEY_DOWN)
+	{
+		//mPlayer->Force(0, KEY_FORCE);
+		mNetwork->SendMoveData(MoveData{ mSide, 0,KEY_FORCE });
+	}
+	else if (key == GLUT_KEY_RIGHT)
+	{
+		//mPlayer->Force(-KEY_FORCE, 0);
+		mNetwork->SendMoveData(MoveData{ mSide, -KEY_FORCE,0 });
+	}
+	else if (key == GLUT_KEY_LEFT)
+	{
+		//mPlayer->Force(KEY_FORCE, 0);
+		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE, 0 });
+	}
+}
+
+void GameScene::MouseInput(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{

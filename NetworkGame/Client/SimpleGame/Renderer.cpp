@@ -62,13 +62,9 @@ void Renderer::ReleaseAllResources()
 		glDeleteShader(m_ParticleWithTextureShader);
 	}
 
-	for (int i=0; i<MAX_TEXTURES; i++)
+	for (auto& tex : m_textureList)
 	{
-		if (m_textureList[i] != 0)
-		{
-			glDeleteTextures(1, &m_textureList[i]);
-			m_textureList[i] = 0;
-		}
+		glDeleteTextures(1, &(tex.second));
 	}
 }
 
@@ -97,10 +93,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 		m_Initialized = true;
 	}
 
-	for (int i = 0; i < MAX_TEXTURES; i++)
-	{
-		m_textureList[i] = 0;
-	}
+	
 
 	bool bHint = true;
 
@@ -116,7 +109,7 @@ bool Renderer::IsInitialized()
 	return m_Initialized;
 }
 
-GLuint Renderer::CreatePngTexture(char * filePath)
+void Renderer::CreatePngTexture(char * filePath, const char* name)
 {
 	GLuint temp;
 	glGenTextures(1, &temp);
@@ -132,21 +125,11 @@ GLuint Renderer::CreatePngTexture(char * filePath)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 
-	GLuint index = 0;
-	for (GLuint i = 0; i < MAX_TEXTURES; i++)
-	{
-		if (m_textureList[i] == 0)
-		{
-			m_textureList[i] = temp;
-			index = i;
-			break;
-		}
-	}
+	m_textureList[name] = temp;
 
-	return index;
 }
 
-GLuint Renderer::CreateBmpTexture(char * filePath)
+GLuint Renderer::CreateBmpTexture(char * filePath, const char* name)
 {
 	unsigned int width, height;
 
@@ -160,27 +143,16 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &rawImage[0]);
 
-	GLuint index = 0;
-	for (GLuint i = 0; i < MAX_TEXTURES; i++)
-	{
-		if (m_textureList[i] == 0)
-		{
-			m_textureList[i] = temp;
-			index = i;
-			break;
-		}
-	}
+	m_textureList[name] = temp;
 
-	return index;
+	return 0;
 }
 
-void Renderer::DeleteTexture(GLuint textureID)
+
+
+GLuint Renderer::GetTexture(const char * name)
 {
-	if (m_textureList[textureID] != 0)
-	{
-		glDeleteTextures(1, &m_textureList[textureID]);
-		m_textureList[textureID] = 0;
-	}	
+	return m_textureList[name];
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -791,7 +763,7 @@ void Renderer::DrawBorderXY(float x, float y, float z, float width, float height
 
 void Renderer::DrawTexturedRect(float x, float y, float z, float size, float r, float g, float b, float a, GLuint texID, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 
@@ -837,7 +809,7 @@ void Renderer::DrawTexturedRect(float x, float y, float z, float size, float r, 
 
 void Renderer::DrawTexturedRectSeq(float x, float y, float z, float size, float r, float g, float b, float a, GLuint texID, int currSeqX, int currSeqY, int totalSeqX, int totalSeqY, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 
@@ -891,7 +863,7 @@ void Renderer::DrawTexturedRectSeq(float x, float y, float z, float size, float 
 
 void Renderer::DrawTexturedRectXY(float x, float y, float z, float width, float height, float r, float g, float b, float a, GLuint texID, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 
@@ -937,7 +909,7 @@ void Renderer::DrawTexturedRectXY(float x, float y, float z, float width, float 
 
 void Renderer::DrawTexturedRectSeqXY(float x, float y, float z, float width, float height, float r, float g, float b, float a, GLuint texID, int currSeqX, int currSeqY, int totalSeqX, int totalSeqY, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 
@@ -991,7 +963,7 @@ void Renderer::DrawTexturedRectSeqXY(float x, float y, float z, float width, flo
 
 void Renderer::DrawParticle(float x, float y, float z, float size, float r, float g, float b, float a, float gDirX, float gDirY, GLuint texID, float timeInSeconds, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 
@@ -1051,7 +1023,7 @@ void Renderer::DrawParticle(float x, float y, float z, float size, float r, floa
 
 void Renderer::DrawParticleClimate(float x, float y, float z, float size, float r, float g, float b, float a, float gDirX, float gDirY, GLuint texID, float timeInSeconds, float level)
 {
-	GLuint tID = m_textureList[texID];
+	GLuint tID = texID;
 
 	float newX, newY;
 

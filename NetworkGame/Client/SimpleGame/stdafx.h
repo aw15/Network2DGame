@@ -6,6 +6,7 @@
 
 #include<iostream>
 #include<vector>
+#include<unordered_map>
 #include<iostream>
 #include<random>
 
@@ -45,7 +46,10 @@
 #define DAMAGE_COOLTIME 1.0f
 #define DAMAGE 100
 
-#define KEY_FORCE 10
+#define KEY_FORCE 1000
+#define GRAVITY 9.8f
+#define FRICTION_COEF 2.0f
+
 
 enum STATE
 {
@@ -55,8 +59,10 @@ enum STATE
 	start
 };
 
+#define NAME_BUFSIZE 256
 //NETWORK CONSTANTS
 #define SIGNAL_SPAWN 0x01
+#define SIGNAL_MOVE 0x02
 #define SIGNAL_EXIT 0x03
 
 
@@ -77,14 +83,6 @@ struct Transform
 	float x;
 	float y;
 	float z;
-	//Transform operator-(Transform& param)
-	//{
-	//	Transform result;
-	//	result.x = x - param.x;
-	//	result.y = y - param.y;
-	//	result.z = z - param.z;
-	//	return result;
-	//}
 	Transform operator-(float param)
 	{
 		Transform result;
@@ -131,16 +129,28 @@ struct SpawnData
 };
 #pragma pack()
 
+#pragma pack(1)
+struct MoveData
+{
+	unsigned short side;
+	int forceX;
+	int forceY;
+};
+#pragma pack()
+
 const Color REDTEAM_COLOR = { 1,0,0,1 };
 const Color BLUETEAM_COLOR = { 0,0,1,1 } ;
 
 #include "Renderer.h"
 #include"Sound.h"
+#include"Scene.h"
 #include"Network.h"
-#include"SceneManager.h"
+#include"GameScene.h"
+#include"StartScene.h"
 #include"Bullet.h"
 #include"Player.h"
 #include"Object.h"
+
 
 void err_display(const char *msg);
 

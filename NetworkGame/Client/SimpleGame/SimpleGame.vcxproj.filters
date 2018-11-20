@@ -42,9 +42,6 @@
     <ClInclude Include="targetver.h">
       <Filter>External Library</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>GameMain</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -63,11 +60,17 @@
     <ClInclude Include="Bullet.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>GameMain</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>GameMain</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScene.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>GameMain</Filter>
-    </ClCompile>
     <ClCompile Include="LoadPng.cpp">
       <Filter>External Library</Filter>
     </ClCompile>
@@ -94,6 +97,15 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>GameMain</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>GameMain</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScene.cpp">
+      <Filter>GameMain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

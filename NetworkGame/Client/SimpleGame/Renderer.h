@@ -30,9 +30,9 @@ public:
 
 	unsigned char * loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight, bool flipY);
 
-	GLuint CreatePngTexture(char * filePath);
-	GLuint CreateBmpTexture(char * filePath);
-	void DeleteTexture(GLuint textureID);
+	void CreatePngTexture(char * filePath, const char* name);
+	GLuint CreateBmpTexture(char * filePath, const char* name);
+	GLuint GetTexture(const char* name);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -68,7 +68,9 @@ private:
 	float m_sceneScaleX = 1;
 	float m_sceneScaleY = 1;
 
-	GLuint m_textureList[MAX_TEXTURES];
+	//GLuint m_textureList[MAX_TEXTURES];
+	unordered_map<string, GLuint> m_textureList;
+
 
 	int m_ParticleCount;
 	int m_ParticleVertexCount;
