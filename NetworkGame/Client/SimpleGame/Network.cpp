@@ -12,7 +12,7 @@ DWORD WINAPI Network::RecieveProcess(LPVOID param)
 	int signal = 0;
 	while (true)
 	{
-		int retval = recvn(clientData->socket, (char*)&signal, sizeof(signal), 0);
+		int retval = recv(clientData->socket, (char*)&signal, sizeof(signal), 0);
 		signal = ntohl(signal);
 		PrintSignal(signal);
 		if (retval == SOCKET_ERROR)

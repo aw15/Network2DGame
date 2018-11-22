@@ -28,6 +28,7 @@ void Player::Update()
 
 
 	//속도의 크기 구하기
+
 	float velocity = sqrt((mVel.x * mVel.x) + (mVel.y * mVel.y));
 
 	if (velocity > FLT_EPSILON)//속도가 있으면.

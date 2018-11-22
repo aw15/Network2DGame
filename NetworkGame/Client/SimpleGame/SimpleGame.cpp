@@ -45,15 +45,21 @@ void MouseInput(int button, int state, int x, int y)
 
 void KeyInput(unsigned char key, int x, int y)
 {
-	//currentScene->KeyInput(key);
+	currentScene->KeyInput(key);
 }
+
+void KeyUpInput(unsigned char key, int x, int y)
+{
+	currentScene->KeyUpInput(key);
+}
+
 
 void SpecialKeyInput(int key, int x, int y)
 {
 	currentScene->KeyInput(key);
 }
 
-void KeyUpInput(int key, int x, int y)
+void SpecialKeyUpInput(int key, int x, int y)
 {
 	currentScene->KeyUpInput(key);
 }
@@ -101,9 +107,13 @@ int main(int argc, char **argv)
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
+	glutKeyboardUpFunc(KeyUpInput);
+
+	//glutSpecialFunc(SpecialKeyInput);
+	//glutSpecialUpFunc(SpecialKeyUpInput);
+
 	glutMouseFunc(MouseInput);
-	glutSpecialFunc(SpecialKeyInput);
-	glutSpecialUpFunc(KeyUpInput);
+
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 	glutMainLoop();
 

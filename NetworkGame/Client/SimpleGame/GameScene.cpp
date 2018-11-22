@@ -400,22 +400,22 @@ void GameScene::CleanUp()
 
 void GameScene::KeyInput(unsigned char key)
 {
-	if (key == GLUT_KEY_UP)
+	if (key == 'w')
 	{
 		//mPlayer->Force(0, KEY_FORCE);
 		mNetwork->SendMoveData(MoveData{ mSide,0,KEY_FORCE });
 	}
-	else if (key == GLUT_KEY_DOWN)
+	else if (key == 's')
 	{
 		//mPlayer->Force(0, -KEY_FORCE);
 		mNetwork->SendMoveData(MoveData{ mSide, 0,-KEY_FORCE });
 	}
-	else if (key == GLUT_KEY_RIGHT)
+	else if (key == 'd')
 	{
 		//mPlayer->Force(KEY_FORCE,0);
 		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE,0});
 	}
-	else if (key == GLUT_KEY_LEFT)
+	else if (key == 'a')
 	{
 		//mPlayer->Force(-KEY_FORCE, 0);
 		mNetwork->SendMoveData(MoveData{mSide, -KEY_FORCE,0 });
@@ -424,22 +424,22 @@ void GameScene::KeyInput(unsigned char key)
 
 void GameScene::KeyUpInput(unsigned char key)
 {
-	if (key == GLUT_KEY_UP)
+	if (key == 'w')
 	{
 		//mPlayer->Force(0, -KEY_FORCE);
 		mNetwork->SendMoveData(MoveData{ mSide, 0, -KEY_FORCE });
 	}
-	else if (key == GLUT_KEY_DOWN)
+	else if (key == 's')
 	{
 		//mPlayer->Force(0, KEY_FORCE);
 		mNetwork->SendMoveData(MoveData{ mSide, 0,KEY_FORCE });
 	}
-	else if (key == GLUT_KEY_RIGHT)
+	else if (key == 'd')
 	{
 		//mPlayer->Force(-KEY_FORCE, 0);
 		mNetwork->SendMoveData(MoveData{ mSide, -KEY_FORCE,0 });
 	}
-	else if (key == GLUT_KEY_LEFT)
+	else if (key == 'a')
 	{
 		//mPlayer->Force(KEY_FORCE, 0);
 		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE, 0 });
