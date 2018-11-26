@@ -67,7 +67,10 @@
       <Filter>GameMain</Filter>
     </ClInclude>
     <ClInclude Include="StartScene.h">
-      <Filter>Common</Filter>
+      <Filter>GameMain</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScene.h">
+      <Filter>GameMain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +108,9 @@
       <Filter>GameMain</Filter>
     </ClCompile>
     <ClCompile Include="StartScene.cpp">
+      <Filter>GameMain</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScene.cpp">
       <Filter>GameMain</Filter>
     </ClCompile>
   </ItemGroup>

@@ -53,10 +53,13 @@
 
 enum STATE
 {
-	win =0,
-	lose,
-	play,
-	start
+	GameWin =0,
+	GameLose,
+	GamePlay,
+	Start,
+	EndWin,
+	EndLose,
+	EndQuit
 };
 
 #define NAME_BUFSIZE 256
@@ -147,6 +150,7 @@ const Color BLUETEAM_COLOR = { 0,0,1,1 } ;
 #include"Network.h"
 #include"GameScene.h"
 #include"StartScene.h"
+#include"EndScene.h"
 #include"Bullet.h"
 #include"Player.h"
 #include"Object.h"

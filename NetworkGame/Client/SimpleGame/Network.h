@@ -13,6 +13,7 @@ public:
 	void SendSpawnData(SpawnData& data);
 	void SendExitData(int score, char* name);
 	void SendMoveData(MoveData data);
+	void SetIP(const char* iptext);
 
 	static DWORD WINAPI RecieveProcess(LPVOID param);
 	static void DispatchSignal(const int signal, ClientType* clientData);
@@ -24,5 +25,6 @@ private:
 	HANDLE mThread;
 
 	GameScene* mSceneManager;
+	ULONG mIp = inet_addr("127.0.0.1");
 };
 

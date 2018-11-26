@@ -11,6 +11,10 @@ public:
     virtual	void KeyInput(unsigned char key) = 0;
 	virtual void KeyUpInput(unsigned char key) = 0;
 	virtual void MouseInput(int button, int state, int x, int y) = 0;
+	virtual void CleanUp() = 0;
+protected:
+	Renderer* mRenderer;
+	
 
 };
 

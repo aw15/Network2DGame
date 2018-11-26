@@ -14,6 +14,7 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\freeglut.h"
 
 
+void CleanUp();
 
 unordered_map<string, Scene*> gScenes;
 
@@ -28,6 +29,26 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	currentScene->Update();
 	currentScene->Render();
+	auto state = currentScene->GetState();
+	if (state == STATE::GameLose)
+	{
+		currentScene = gScenes["End"];
+		((EndScene*)currentScene)->SetState(STATE::EndLose);
+	}
+	else if (state == STATE::GameWin)
+	{
+		currentScene = gScenes["End"];
+		((EndScene*)currentScene)->SetState(STATE::EndWin);
+	}
+	else if (state == STATE::Start)
+	{
+		currentScene = gScenes["Game"];
+	}
+	else if (state == STATE::EndQuit)
+	{
+		CleanUp();
+		exit(NULL);
+	}
 
 	glutSwapBuffers();
 }
@@ -64,6 +85,24 @@ void SpecialKeyUpInput(int key, int x, int y)
 	currentScene->KeyUpInput(key);
 }
 
+void CleanUp()
+{
+	delete gRenderer;
+	delete gNetwork;
+
+	gScenes["Game"]->CleanUp();
+	delete gScenes["Game"];
+	gScenes.erase("Game");
+
+	gScenes["Start"]->CleanUp();
+	delete gScenes["Start"];
+	gScenes.erase("Start");
+
+	gScenes["End"]->CleanUp();
+	delete gScenes["End"];
+	gScenes.erase("End");
+}
+
 int main(int argc, char **argv)
 {
 
@@ -83,6 +122,8 @@ int main(int argc, char **argv)
 	srand((unsigned)time(NULL));
 
 
+
+
 	gRenderer = new Renderer(WIDTH, HEIGHT);
 	if (!gRenderer->IsInitialized())
 	{
@@ -97,35 +138,30 @@ int main(int argc, char **argv)
 	GameScene* gameScene = new GameScene(gRenderer,gNetwork);
 	gScenes["Game"] = gameScene;
 
+	EndScene* endScene = new EndScene(gRenderer);
+	gScenes["End"] = endScene;
+
 	gNetwork->Initialize(dynamic_cast<GameScene*>(gScenes["Game"]));
 	gScenes["Game"]->Initialize();
+	if(argc>=2)
+		((GameScene*)gScenes["Game"])->SetName(argv[1]);
+	if (argc >= 3)
+		gNetwork->SetIP(argv[2]);
 
+	gScenes["Start"]->Initialize();
+	gScenes["End"]->Initialize();
 
-	currentScene = gScenes["Game"];
-	//currentScene = gScenes["Start"];
+	currentScene = gScenes["Start"];
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
 	glutKeyboardUpFunc(KeyUpInput);
-
-	//glutSpecialFunc(SpecialKeyInput);
-	//glutSpecialUpFunc(SpecialKeyUpInput);
-
 	glutMouseFunc(MouseInput);
-
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 	glutMainLoop();
 
-	delete gRenderer;
-	delete gNetwork;
-
-	
-
-	delete gScenes["Game"];
-	gScenes.erase("Game");
-	delete gScenes["Start"];
-	gScenes.erase("Start");
+	CleanUp();
 
     return 0;
 }

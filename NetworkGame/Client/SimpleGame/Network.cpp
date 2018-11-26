@@ -14,7 +14,7 @@ DWORD WINAPI Network::RecieveProcess(LPVOID param)
 	{
 		int retval = recv(clientData->socket, (char*)&signal, sizeof(signal), 0);
 		signal = ntohl(signal);
-		PrintSignal(signal);
+		//PrintSignal(signal);
 		if (retval == SOCKET_ERROR)
 		{
 			printf("spawn recv socket error\n");
@@ -113,7 +113,7 @@ bool Network::Initialize(GameScene* sceneManager)
 	//////NETWORK
 	mServerAddr.sin_family = AF_INET;
 	mServerAddr.sin_port = htons(9000);
-	mServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	mServerAddr.sin_addr.s_addr = mIp;
 
 
 	mClientData.socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -225,6 +225,11 @@ void Network::SendMoveData(MoveData data)
 		printf("spawn send socket error\n");
 		return;
 	}
+}
+
+void Network::SetIP(const char * iptext)
+{
+	mIp = inet_addr(iptext);
 }
 
 

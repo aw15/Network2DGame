@@ -53,9 +53,9 @@ private:
 
 	//사운드
 	Sound* mSound;
-	//렌더러
-	Renderer* mRenderer;
 	
+
+	STATE mState = STATE::GamePlay;
 	//시간////////////////////////
 	TimePoint mPrevTime;//이전시간
 	float mTimeAccumulator=0.f;

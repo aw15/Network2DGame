@@ -280,12 +280,14 @@ void GameScene::Update()
 		mTimeAccumulator -= TIME_FREQUENCY;
 		CollisionCheck();
 		DeleteDeadObject();//죽은 애들 지우기
-
-		auto state = GetState();
-		if (state == STATE::win || state == STATE::lose)
-		{
-			mNetwork->SendExitData(mScore,mPlayerName);
-		}
+	}
+	if (mPlayer->isDead)
+		mState = STATE::GameLose;
+	else if (mEnemy->isDead)
+		mState = STATE::GameWin;
+	if (mState == STATE::GameWin || mState == STATE::GameLose)
+	{
+		mNetwork->SendExitData(mScore, mPlayerName);
 	}
 }
 
@@ -371,12 +373,7 @@ void GameScene::DeleteDeadObject()
 
 STATE GameScene::GetState()
 {
-	if (mPlayer->isDead)
-		return STATE::lose;
-	else if (mEnemy->isDead)
-		return STATE::win;
-	else
-		return STATE::play;
+	return mState;
 }
 
 
@@ -394,8 +391,6 @@ void GameScene::CleanUp()
 		delete (*iter);
 		iter = mEnemyList.erase(iter);
 	}
-	delete mRenderer;
-	delete mNetwork;
 }
 
 void GameScene::KeyInput(unsigned char key)
@@ -419,6 +414,10 @@ void GameScene::KeyInput(unsigned char key)
 	{
 		//mPlayer->Force(-KEY_FORCE, 0);
 		mNetwork->SendMoveData(MoveData{mSide, -KEY_FORCE,0 });
+	}
+	else if (key == 'q')
+	{
+		mState = STATE::GameLose;
 	}
 }
 
