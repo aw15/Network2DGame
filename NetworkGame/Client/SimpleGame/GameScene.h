@@ -49,7 +49,7 @@ private:
 	unsigned short mSide = BLUE_TEAM;
 
 	int mScore = 0;
-	char mPlayerName[NAME_BUFSIZE] = "Leo";
+	char mPlayerName[NAME_BUFSIZE] = "Leopard";
 
 	//»ç¿îµå
 	Sound* mSound;

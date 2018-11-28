@@ -200,7 +200,7 @@ void Network::SendExitData(int score,char* name)
 		printf("spawn send socket error\n");
 		return;
 	}
-	retval = send(mClientData.socket, (char*)name, sizeof(NAME_BUFSIZE), 0);
+	retval = send(mClientData.socket, (char*)name, NAME_BUFSIZE, 0);
 	if (retval == SOCKET_ERROR)
 	{
 		printf("spawn send socket error\n");
