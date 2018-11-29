@@ -141,7 +141,12 @@ int main(int argc, char **argv)
 	EndScene* endScene = new EndScene(gRenderer);
 	gScenes["End"] = endScene;
 
-	gNetwork->Initialize(dynamic_cast<GameScene*>(gScenes["Game"]));
+	if (!gNetwork->Initialize(dynamic_cast<GameScene*>(gScenes["Game"])))
+	{
+		printf("=============Server Connection Failed==============\n");
+		return 0;
+	}
+
 	gScenes["Game"]->Initialize();
 	if(argc>=2)
 		((GameScene*)gScenes["Game"])->SetName(argv[1]);

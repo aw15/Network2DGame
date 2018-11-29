@@ -99,7 +99,6 @@ Network::~Network()
 {
 	closesocket(mClientData.socket);
 	WSACleanup();
-
 }
 
 bool Network::Initialize(GameScene* sceneManager)
@@ -152,7 +151,8 @@ bool Network::Initialize(GameScene* sceneManager)
 	}
 
 	mThread = CreateThread(NULL, NULL, RecieveProcess, (LPVOID)&mClientData, NULL, NULL);
-
+	if (mThread == NULL)
+		return false;
 
 
 
