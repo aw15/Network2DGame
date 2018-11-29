@@ -130,13 +130,19 @@ int main(int argc, char **argv)
 		std::cout << "Renderer could not be initialized.. \n";
 	}
 
+
+
 	gNetwork = new Network();
+	if (argc >= 3)
+		gNetwork->SetIP(argv[2]);
 
 	StartScene* startScene = new StartScene(gRenderer);
 	gScenes["Start"] = startScene;
 
 	GameScene* gameScene = new GameScene(gRenderer,gNetwork);
 	gScenes["Game"] = gameScene;
+	if (argc >= 2)
+		((GameScene*)gScenes["Game"])->SetName(argv[1]);
 
 	EndScene* endScene = new EndScene(gRenderer);
 	gScenes["End"] = endScene;
@@ -148,11 +154,6 @@ int main(int argc, char **argv)
 	}
 
 	gScenes["Game"]->Initialize();
-	if(argc>=2)
-		((GameScene*)gScenes["Game"])->SetName(argv[1]);
-	if (argc >= 3)
-		gNetwork->SetIP(argv[2]);
-
 	gScenes["Start"]->Initialize();
 	gScenes["End"]->Initialize();
 

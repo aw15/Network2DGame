@@ -229,6 +229,7 @@ void Network::SendMoveData(MoveData data)
 
 void Network::SetIP(const char * iptext)
 {
+	cout << iptext << endl;
 	mIp = inet_addr(iptext);
 }
 
