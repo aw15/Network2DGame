@@ -43,10 +43,10 @@
 #define SOUND_COOLTIME 1.0f
 #define ARROW_SPAWNTIME 1.0f
 
-#define DAMAGE_COOLTIME 1.0f
+//#define DAMAGE_COOLTIME 1.0f
 #define DAMAGE 100
 
-#define KEY_FORCE 1
+#define KEY_FORCE 10
 #define GRAVITY 9.8f
 #define FRICTION_COEF 2.0f
 

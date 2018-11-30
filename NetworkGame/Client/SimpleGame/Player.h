@@ -14,7 +14,7 @@ public:
 	void SetSize(const float size) { mSize = size; }
 	void Force(float x, float y) { mForce.x += x; mForce.y += y; }
 	//-------------------------------GET-----------------------------------------------------------
-	float GetDamageCoolTime() { return mDamageCoolTime; }
+	//float GetDamageCoolTime() { return mDamageCoolTime; }
 	Transform* GetCollider();
 public:
 	bool isDead=false;
@@ -22,7 +22,7 @@ private:
 	Renderer* mRenderer = nullptr;
 	float mLife = 1000;
 	float mLifeTime = 0;
-	float mDamageCoolTime = 0;
+	//float mDamageCoolTime = 0;
 	
 
 	Transform mPosition = {0,0,0};

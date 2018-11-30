@@ -162,95 +162,80 @@ void GameScene::TestAddObject(float x, float y)
 
 void GameScene::CollisionCheck()
 {
-	bool isCollide = false;
+
+	//for (auto& enemy : mEnemyList)
+	//{
+	//	Transform* standard = enemy->GetCollider();
+
+	//	for (auto& ally : mAllyList)
+	//	{
+	//		Transform* compare = ally->GetCollider();
+	//		if (BoxCollision(standard, compare))
+	//		{
+	//			ally->isDead = true;
+	//			enemy->isDead = true;
+	//			break;
+	//		}
+	//	}
+	//}
 
 	for (auto& enemy : mEnemyList)
 	{
-		Transform* standard = enemy->GetCollider();
-
-		for (auto& ally:mAllyList)
+		if (BoxCollision(mPlayer->GetCollider(), enemy->GetCollider()))
 		{
-			Transform* compare = ally->GetCollider();
-			isCollide = BoxCollision(standard, compare);
-			if (ally->GetDamageCoolTime() > DAMAGE_COOLTIME && isCollide)
-				ally->Damage(DAMAGE);
-
-			if (enemy->GetDamageCoolTime() > DAMAGE_COOLTIME && isCollide)
-				enemy->Damage(DAMAGE);
-			
-			isCollide = false;
-		}
-	}
-
-
-	for (auto& enemy : mEnemyList)
-	{
-		isCollide = BoxCollision(mPlayer->GetCollider(), enemy->GetCollider());
-		if (!isCollide)
-			continue;
-		if(mPlayer->GetDamageCoolTime()>DAMAGE_COOLTIME&&isCollide)
+			enemy->isDead = true;
 			mPlayer->Damage(DAMAGE);
-		if (enemy->GetDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
-			enemy->Damage(DAMAGE);
-		isCollide = false;
-
-	//	EnemyBulletCheck(enemy);
+		}
 	}
 
 	for (auto& ally:mAllyList)
 	{
-		isCollide = BoxCollision(mEnemy->GetCollider(), ally->GetCollider());
-		if (!isCollide)
-			continue;
-		if (mEnemy->GetDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
+		if (BoxCollision(mEnemy->GetCollider(), ally->GetCollider()))
+		{
+			ally->isDead = true;
 			mEnemy->Damage(DAMAGE);
-		if (ally->GetDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
-			ally->Damage(DAMAGE);
-
-		isCollide = false;
-
-		//AllyBulletCheck(ally);
-	}
-}
-
-void GameScene::EnemyBulletCheck(Object* object)
-{
-	bool isCollide = false;
-	for (auto& ally:mAllyList)
-	{
-		for (auto& bullet : object->mArrowList)
-		{
-			isCollide = BoxCollision(ally->GetCollider(), bullet->GetCollider());
-
-			if (ally->GetDamageCoolTime()> DAMAGE_COOLTIME&&isCollide)
-				ally->Damage(DAMAGE);
-			if(bullet->getDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
-				bullet->Damage(DAMAGE);
-
-			isCollide = false;
 		}
 	}
 }
 
-void GameScene::AllyBulletCheck(Object* object)
-{
-	bool isCollide = false;
-
-	for (auto& enemy:mEnemyList)
-	{
-		for (auto& bullet : object->mArrowList)
-		{
-			isCollide = BoxCollision(enemy->GetCollider(), bullet->GetCollider());
-
-			if (enemy->GetDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
-				enemy->Damage(DAMAGE);
-			if (bullet->getDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
-				bullet->Damage(DAMAGE);
-
-			isCollide = false;
-		}
-	}
-}
+//void GameScene::EnemyBulletCheck(Object* object)
+//{
+//	bool isCollide = false;
+//	for (auto& ally:mAllyList)
+//	{
+//		for (auto& bullet : object->mArrowList)
+//		{
+//			isCollide = BoxCollision(ally->GetCollider(), bullet->GetCollider());
+//
+//			if (ally->GetDamageCoolTime()> DAMAGE_COOLTIME&&isCollide)
+//				ally->Damage(DAMAGE);
+//			if(bullet->getDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
+//				bullet->Damage(DAMAGE);
+//
+//			isCollide = false;
+//		}
+//	}
+//}
+//
+//void GameScene::AllyBulletCheck(Object* object)
+//{
+//	bool isCollide = false;
+//
+//	for (auto& enemy:mEnemyList)
+//	{
+//		for (auto& bullet : object->mArrowList)
+//		{
+//			isCollide = BoxCollision(enemy->GetCollider(), bullet->GetCollider());
+//
+//			if (enemy->GetDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
+//				enemy->Damage(DAMAGE);
+//			if (bullet->getDamageCoolTime() > DAMAGE_COOLTIME&&isCollide)
+//				bullet->Damage(DAMAGE);
+//
+//			isCollide = false;
+//		}
+//	}
+//}
 
 void GameScene::Update()
 {	
@@ -330,18 +315,7 @@ void GameScene::DeleteDeadObject()
 		}
 		else
 		{
-			for (auto arrowIter =  object->mArrowList.begin();arrowIter!=object->mArrowList.end();)
-			{
-				Bullet* arrow = *arrowIter;
-				if (arrow->isDead)
-				{
-					delete arrow;
-					arrowIter = object->mArrowList.erase(arrowIter);
-				}
-				else
-					arrowIter++;
-			}
-			++iter;
+			iter++;
 		}
 	}
 
@@ -355,18 +329,7 @@ void GameScene::DeleteDeadObject()
 		}
 		else
 		{
-			for (auto arrowIter = object->mArrowList.begin(); arrowIter != object->mArrowList.end();)
-			{
-				Bullet* arrow = *arrowIter;
-				if (arrow->isDead)
-				{
-					delete arrow;
-					arrowIter = object->mArrowList.erase(arrowIter);
-				}
-				else
-					arrowIter++;
-			}
-			++iter;
+			iter++;
 		}
 	}
 }
@@ -423,26 +386,26 @@ void GameScene::KeyInput(unsigned char key)
 
 void GameScene::KeyUpInput(unsigned char key)
 {
-	if (key == 'w')
-	{
-		//mPlayer->Force(0, -KEY_FORCE);
-		mNetwork->SendMoveData(MoveData{ mSide, 0, -KEY_FORCE });
-	}
-	else if (key == 's')
-	{
-		//mPlayer->Force(0, KEY_FORCE);
-		mNetwork->SendMoveData(MoveData{ mSide, 0,KEY_FORCE });
-	}
-	else if (key == 'd')
-	{
-		//mPlayer->Force(-KEY_FORCE, 0);
-		mNetwork->SendMoveData(MoveData{ mSide, -KEY_FORCE,0 });
-	}
-	else if (key == 'a')
-	{
-		//mPlayer->Force(KEY_FORCE, 0);
-		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE, 0 });
-	}
+	//if (key == 'w')
+	//{
+	//	//mPlayer->Force(0, -KEY_FORCE);
+	//	mNetwork->SendMoveData(MoveData{ mSide, 0, -KEY_FORCE });
+	//}
+	//else if (key == 's')
+	//{
+	//	//mPlayer->Force(0, KEY_FORCE);
+	//	mNetwork->SendMoveData(MoveData{ mSide, 0,KEY_FORCE });
+	//}
+	//else if (key == 'd')
+	//{
+	//	//mPlayer->Force(-KEY_FORCE, 0);
+	//	mNetwork->SendMoveData(MoveData{ mSide, -KEY_FORCE,0 });
+	//}
+	//else if (key == 'a')
+	//{
+	//	//mPlayer->Force(KEY_FORCE, 0);
+	//	mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE, 0 });
+	//}
 }
 
 void GameScene::MouseInput(int button, int state, int x, int y)

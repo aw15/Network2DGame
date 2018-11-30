@@ -22,7 +22,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 	{
 	case OBJECT_ARCHER:
 		mSize = 30;
-		mLife = 300;
+		mMaxHp = 300;
 		mSpeed = { 100,100,0 };
 		mLevel = 0.2;
 		mArrowSpawnCoolTime = 1;
@@ -30,7 +30,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		break;
 	case OBJECT_WARRIOR:
 		mSize = 100;
-		mLife = 300;
+		mMaxHp = 300;
 		mSpeed = { 20,20,0 };
 		mLevel = 0.2f;
 		mArrowSpawnCoolTime = 1;
@@ -38,7 +38,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		break;
 	case OBJECT_MAGE:
 		mSize = 50;
-		mLife = 300;
+		mMaxHp = 300;
 		mSpeed = { 50,50,0 };
 		mLevel = 0.2f;
 		mMaxIndex = 7;
@@ -53,15 +53,15 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 
 
 
-void Object::Damage(const float amount)
-{
-		mLifeTime += amount;
-		if (mLife <= mLifeTime)
-		{
-			isDead = true;
-		}
-		mDamageCoolTime = 0;
-}
+//void Object::Damage(const float amount)
+//{
+//		mLifeTime += amount;
+//		if (mLife <= mLifeTime)
+//		{
+//			isDead = true;
+//		}
+//		mDamageCoolTime = 0;
+//}
 
 
 
@@ -116,7 +116,7 @@ void Object::Render(GLuint texture,GLuint particle)
 	
 	if (mType == OBJECT_ARCHER)
 	{
-		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (mSize), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mLife - mLifeTime) / mLife, mLevel);
+		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (mSize), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mMaxHp - mCurrentHP) / mMaxHp, mLevel);
 		if (mDirection.y > 0)
 		{
 			
@@ -129,7 +129,7 @@ void Object::Render(GLuint texture,GLuint particle)
 	}
 	else if (mType == OBJECT_WARRIOR)
 	{
-		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (20.0f), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mLife - mLifeTime) / mLife, mLevel);	
+		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (20.0f), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mMaxHp - mCurrentHP) / mMaxHp, mLevel);	
 		if (mDirection.y > 0)
 		{
 			mRenderer->DrawTexturedRectSeq(mPosition.x, mPosition.y, mPosition.z, mSize, 1, 1, 1, 1, texture, int(mAnimationIndex) % mMaxIndex, 0, 6, 4, mLevel);
@@ -141,7 +141,7 @@ void Object::Render(GLuint texture,GLuint particle)
 	}
 	else if (mType == OBJECT_MAGE)
 	{
-		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (15.0f), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mLife - mLifeTime) / mLife, mLevel);
+		mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (15.0f), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mMaxHp - mCurrentHP) / mMaxHp, mLevel);
 		if (mDirection.y > 0)
 		{
 			mRenderer->DrawTexturedRectSeq(mPosition.x, mPosition.y, mPosition.z, mSize, 1, 1, 1, 1, texture, int(mAnimationIndex) % mMaxIndex, 0, 7, 4, mLevel);
@@ -170,7 +170,6 @@ void Object::Update()
 
 	mAnimationIndex += TIME_FREQUENCY * 10;
 	
-	mDamageCoolTime += TIME_FREQUENCY;
 
 	mPosition.x += mDirection.x*(mSpeed.x*TIME_FREQUENCY);
 	mPosition.y += mDirection.y*(mSpeed.y*TIME_FREQUENCY);

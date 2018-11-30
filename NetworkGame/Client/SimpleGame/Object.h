@@ -15,7 +15,7 @@ public:
 	~Object();
 	//-------------------------------세트--------------------------------------------------------
 	void SetSpeed(const Transform speed) { mSpeed = speed; };
-	void Damage(const float amount);
+//	void Damage(const float amount);
 	void SetPosition(const Transform& pos) { mPosition = pos;}
 	void SetSize(const float size) { mSize = size; }
 	void SetDirection(const Transform& dir) { mDirection = dir; }
@@ -24,9 +24,8 @@ public:
 	Transform* GetCollider();
 	Transform GetTransform() { return mPosition; };
 	int GetType() { return mType; };
-	float GetLife() { return mLife; };
+	float GetLife() { return mMaxHp; };
 	int GetTeam() { return mTeam; };
-	float GetDamageCoolTime() { return mDamageCoolTime; }
 	Transform GetDir() { return mDirection; }
 	//-----------------------------기능함수--------------------------------------------------------
 	void MakeArrow();
@@ -52,11 +51,10 @@ private:
 	float mAnimationIndex = 0;
 	int mMaxIndex = 0;
 	//수명----------------------------------------------
-	float mLife;
-	float mLifeTime=0;
+	float mMaxHp;
+	float mCurrentHP=0;
 	//-----------------------------------화살관련
 	float mArrowSpawnTime = 0;
-	float mDamageCoolTime = 0;
 	float mArrowSpawnCoolTime = 0;
 	//----------------------------------- 팀
 

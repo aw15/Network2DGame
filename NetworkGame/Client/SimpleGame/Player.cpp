@@ -23,80 +23,11 @@ void Player::Render(GLuint texture)
 
 void Player::Update()
 {
-	mDamageCoolTime += TIME_FREQUENCY;
-	//mForce = { 0,0,0 };
-
-
-	////속도의 크기 구하기
-
-	//float velocity = sqrt((mVel.x * mVel.x) + (mVel.y * mVel.y));
-
-	//if (velocity > FLT_EPSILON)//속도가 있으면.
-	//{
-	//	float gz = GRAVITY * mMass;//중력가속도. 중력 속도 * 질량.
-	//	float friction = FRICTION_COEF * gz;//마찰력 값
-
-	//	float frictionVelX, frictionVelY;
-	//	frictionVelX = -friction * mVel.x / velocity;
-	//	frictionVelY = -friction * mVel.y / velocity;
-
-
-	//	float frictionAccX, frictionAccY;
-	//	frictionAccX = frictionVelX / mMass;
-	//	frictionAccY = frictionVelY / mMass;
-
-	//	float afterVelX, afterVelY;
-	//	afterVelX = mVel.x + (frictionAccX*TIME_FREQUENCY);
-	//	afterVelY = mVel.y + (frictionAccY*TIME_FREQUENCY);
-
-	//	if (afterVelX * mVel.x < 0.0f)
-	//		mVel.x = 0.0f;
-	//	else
-	//		mVel.x = mVel.x + (frictionAccX * TIME_FREQUENCY);
-
-	//	if (afterVelY * mVel.y < 0.0f)
-	//		mVel.y = 0.0f;
-	//	else
-	//		mVel.y = mVel.y + (frictionAccY * TIME_FREQUENCY);
-	//}
-
-	//float accX = (mForce.x / mMass);
-	//float accY = (mForce.y / mMass);
-
-	//mVel.x = mVel.x + accX * TIME_FREQUENCY;
-	//mVel.y = mVel.y + accY * TIME_FREQUENCY;
-
-
-	//mPosition.x = mPosition.x + (mVel.x*TIME_FREQUENCY);
-	//mPosition.y = mPosition.y + (mVel.y*TIME_FREQUENCY);
-
-
-	//if (mPosition.y >= (HEIGHT / 2 - 10))
-	//{
-	//	mPosition.y -= 2.0f;
-	//	mVel.x = 0;
-	//	mVel.y = 0;
-	//}
-	//else if (mPosition.y <= -(HEIGHT / 2 - 10))
-	//{
-	//	mPosition.y += 2.0f;
-	//	mVel.x = 0;
-	//	mVel.y = 0;
-	//}
-	//else if (mPosition.x >= (WIDTH / 2 - 10))
-	//{
-	//	mPosition.x -= 2.0f;
-	//	mVel.x = 0;
-	//	mVel.y = 0;
-	//}
-	//else if (mPosition.x <= -(WIDTH / 2 - 10))
-	//{
-	//	mPosition.x += 2.0f;
-	//	mVel.x = 0;
-	//	mVel.y = 0;
-	//}
+	
 	mPosition.x += mForce.x;
-	mPosition.x += mForce.y;
+	mPosition.y += mForce.y;
+	mForce.x = 0;
+	mForce.y = 0;
 }
 
 void Player::Damage(const float amount)
@@ -106,7 +37,6 @@ void Player::Damage(const float amount)
 	{
 		isDead = true;
 	}
-	mDamageCoolTime = 0;
 }
 
 Transform* Player::GetCollider()
