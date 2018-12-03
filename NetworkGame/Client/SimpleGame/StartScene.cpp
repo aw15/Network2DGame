@@ -11,6 +11,7 @@ StartScene::StartScene(Renderer* renderer)
 
 StartScene::~StartScene()
 {
+	printf("Hello!\n");
 }
 
 bool StartScene::Initialize()

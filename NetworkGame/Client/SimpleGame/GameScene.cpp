@@ -343,17 +343,17 @@ void GameScene::CleanUp()
 
 void GameScene::KeyInput(unsigned char key)
 {
-	if (key == 'w')
-	{
-		//mPlayer->Force(0, KEY_FORCE);
-		mNetwork->SendMoveData(MoveData{ mSide,0,KEY_FORCE });
-	}
-	else if (key == 's')
-	{
-		//mPlayer->Force(0, -KEY_FORCE);
-		mNetwork->SendMoveData(MoveData{ mSide, 0,-KEY_FORCE });
-	}
-	else if (key == 'd')
+	//if (key == 'w')
+	//{
+	//	//mPlayer->Force(0, KEY_FORCE);
+	//	mNetwork->SendMoveData(MoveData{ mSide,0,KEY_FORCE });
+	//}
+	//else if (key == 's')
+	//{
+	//	//mPlayer->Force(0, -KEY_FORCE);
+	//	mNetwork->SendMoveData(MoveData{ mSide, 0,-KEY_FORCE });
+	//}
+	if (key == 'd')
 	{
 		//mPlayer->Force(KEY_FORCE,0);
 		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE,0});

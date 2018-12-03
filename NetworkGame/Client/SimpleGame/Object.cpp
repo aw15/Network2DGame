@@ -29,9 +29,9 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		mMaxIndex = 10;
 		break;
 	case OBJECT_WARRIOR:
-		mSize = 100;
+		mSize = 50;
 		mMaxHp = 300;
-		mSpeed = { 20,20,0 };
+		mSpeed = { 40,40,0 };
 		mLevel = 0.2f;
 		mArrowSpawnCoolTime = 1;
 		mMaxIndex = 6;
@@ -177,23 +177,27 @@ void Object::Update()
 
 	if (mPosition.y >= (HEIGHT / 2 - 10))
 	{
-		mPosition.y = (HEIGHT / 2 - 10);
-		mDirection.y *= -1;
+		isDead = true;
+		/*mPosition.y = (HEIGHT / 2 - 10);
+		mDirection.y *= -1;*/
 	}
 	if (mPosition.x >= (WIDTH / 2 - 10))
 	{
-		mPosition.x = (WIDTH / 2 - 10);
-		mDirection.x *= -1;
+		isDead = true;
+	/*	mPosition.x = (WIDTH / 2 - 10);
+		mDirection.x *= -1;*/
 	}
 	if (mPosition.x <= -(WIDTH / 2 - 10))
 	{
-		mPosition.x = -(WIDTH / 2 - 10);
-		mDirection.x *= -1;
+		isDead = true;
+	/*	mPosition.x = -(WIDTH / 2 - 10);
+		mDirection.x *= -1;*/
 	}
 	if (mPosition.y <= -(HEIGHT / 2 - 10))
 	{
-		mPosition.y = -(HEIGHT / 2 - 10);
-		mDirection.y *= -1;
+		isDead = true;
+	/*	mPosition.y = -(HEIGHT / 2 - 10);
+		mDirection.y *= -1;*/
 	}
 
 

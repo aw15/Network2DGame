@@ -112,6 +112,13 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(WIDTH, HEIGHT);//윈도우 세로크기 700도 안되서 600으로 합니다.
 	glutCreateWindow("Game Software Engineering KPU");
+
+	HWND hwnd = FindWindow(NULL, "Game Software Engineering KPU");
+	DWORD dwStyle = GetWindowLong(hwnd, GWL_STYLE);
+	dwStyle &= ~WS_MAXIMIZEBOX & ~WS_THICKFRAME;
+	SetWindowLong(hwnd, GWL_STYLE, dwStyle);
+
+
 	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))
 		std::cout << " GLEW Version is 3.0\n ";
@@ -168,6 +175,8 @@ int main(int argc, char **argv)
 	glutMainLoop();
 
 	CleanUp();
+
+
 
     return 0;
 }
