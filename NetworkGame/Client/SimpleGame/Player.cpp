@@ -26,6 +26,20 @@ void Player::Update()
 	
 	mPosition.x += mForce.x;
 	mPosition.y += mForce.y;
+
+
+
+	if (mPosition.y >= (HEIGHT / 2 - 10) ||
+		mPosition.y <= -(HEIGHT / 2 - 10) ||
+		mPosition.x >= (WIDTH / 2 - 10) ||
+		mPosition.x <= -(WIDTH / 2 - 10)
+		)
+	{
+
+		mPosition.x -= mForce.x;
+		mPosition.y -= mForce.y;
+	}
+
 	mForce.x = 0;
 	mForce.y = 0;
 }

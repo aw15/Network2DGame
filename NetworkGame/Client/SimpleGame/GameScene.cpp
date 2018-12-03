@@ -133,6 +133,7 @@ void GameScene::NetworkAddObject(const SpawnData& spawnData)
 		newDir.y *= -1;
 	newObject->SetDirection(newDir);
 
+	
 	if (spawnData.side == mSide)
 	{
 		mAllyList.push_back(newObject);
@@ -162,22 +163,6 @@ void GameScene::TestAddObject(float x, float y)
 
 void GameScene::CollisionCheck()
 {
-
-	//for (auto& enemy : mEnemyList)
-	//{
-	//	Transform* standard = enemy->GetCollider();
-
-	//	for (auto& ally : mAllyList)
-	//	{
-	//		Transform* compare = ally->GetCollider();
-	//		if (BoxCollision(standard, compare))
-	//		{
-	//			ally->isDead = true;
-	//			enemy->isDead = true;
-	//			break;
-	//		}
-	//	}
-	//}
 
 	for (auto& enemy : mEnemyList)
 	{
@@ -415,15 +400,6 @@ void GameScene::MouseInput(int button, int state, int x, int y)
 		x = x - (WIDTH / 2);
 		y = (HEIGHT / 2) - y;
 		AddObject(x, y);
-	}
-
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		x = x - (WIDTH / 2);
-		y = (HEIGHT / 2) - y;
-
-	
-		TestAddObject(x,y);
 	}
 }
 

@@ -20,7 +20,7 @@ public:
 	bool isDead=false;
 private:
 	Renderer* mRenderer = nullptr;
-	float mLife = 1000;
+	float mLife = PLAYER_HP;
 	float mLifeTime = 0;
 	//float mDamageCoolTime = 0;
 	
