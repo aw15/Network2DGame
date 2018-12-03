@@ -25,6 +25,6 @@ private:
 	HANDLE mThread;
 
 	GameScene* mSceneManager;
-	ULONG mIp = inet_addr("10.254.3.104");
+	ULONG mIp = inet_addr("127.0.0.1");
 };
 

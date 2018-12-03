@@ -40,8 +40,8 @@ void Player::Update()
 		mPosition.y -= mForce.y;
 	}
 
-	mForce.x = 0;
-	mForce.y = 0;
+	//mForce.x = 0;
+	//mForce.y = 0;
 }
 
 void Player::Damage(const float amount)

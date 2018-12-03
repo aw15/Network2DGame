@@ -12,7 +12,7 @@ public:
 	void Damage(const float amount);
 	void SetPosition(float x, float y, float z) { mPosition.x = x; mPosition.y = y; mPosition.z = z;}
 	void SetSize(const float size) { mSize = size; }
-	void Force(float x, float y) { mForce.x += x; mForce.y += y; }
+	void Force(float x, float y) { mForce.x = x; mForce.y = y; }
 	//-------------------------------GET-----------------------------------------------------------
 	//float GetDamageCoolTime() { return mDamageCoolTime; }
 	Transform* GetCollider();

@@ -47,7 +47,7 @@
 #define DAMAGE 100
 #define PLAYER_HP 200
 
-#define KEY_FORCE 10
+#define KEY_FORCE 1
 #define GRAVITY 9.8f
 #define FRICTION_COEF 2.0f
 

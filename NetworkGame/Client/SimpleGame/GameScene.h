@@ -4,10 +4,10 @@ class Player;
 class Network;
 class Scene;
 
-class GameScene:public Scene
+class GameScene :public Scene
 {
 public:
-	GameScene(Renderer* renderer ,  Network* network);
+	GameScene(Renderer* renderer, Network* network);
 	~GameScene();
 
 	bool Initialize();
@@ -21,14 +21,12 @@ public:
 
 
 	void CollisionCheck();
-	void EnemyBulletCheck(Object*);
-	void AllyBulletCheck(Object*);
 	void Update();
 	void Render();
 	void DeleteDeadObject();
 	void CleanUp();
 	//SET//////////////////////////////
-	void SetTeam(const int side) { mSide = side;  }
+	void SetTeam(const int side) { mSide = side; }
 	void SetName(const char* name) { strcpy(mPlayerName, name); }
 	//GET//////////////////////////////
 	STATE GetState();
@@ -39,7 +37,6 @@ public:
 	void MouseInput(int button, int state, int x, int y);
 
 private:
-	//GLuint mTexture[10];
 	GLuint mPlayerTex;
 	GLuint mEnemyTex;
 	vector<Object*> mAllyList;//유닛들 리스트
@@ -53,7 +50,9 @@ private:
 
 	//사운드
 	Sound* mSound;
-	
+
+	int movePosition = 0;
+	float mTime = 0;
 
 	STATE mState = STATE::GamePlay;
 	//시간////////////////////////
