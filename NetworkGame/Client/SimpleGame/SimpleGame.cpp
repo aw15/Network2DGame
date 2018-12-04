@@ -32,11 +32,13 @@ void RenderScene(void)
 	auto state = currentScene->GetState();
 	if (state == STATE::GameLose)
 	{
+		((GameScene*)currentScene)->SendExitData();
 		currentScene = gScenes["End"];
 		((EndScene*)currentScene)->SetState(STATE::EndLose);
 	}
 	else if (state == STATE::GameWin)
 	{
+		((GameScene*)currentScene)->SendExitData();
 		currentScene = gScenes["End"];
 		((EndScene*)currentScene)->SetState(STATE::EndWin);
 	}
@@ -145,6 +147,7 @@ int main(int argc, char **argv)
 
 	StartScene* startScene = new StartScene(gRenderer);
 	gScenes["Start"] = startScene;
+
 
 	GameScene* gameScene = new GameScene(gRenderer,gNetwork);
 	gScenes["Game"] = gameScene;

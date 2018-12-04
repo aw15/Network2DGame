@@ -9,7 +9,7 @@ public:
 	virtual void Update();
 public:
 	//-------------------------------¼¼Æ®--------------------------------------------------------
-	void Damage(const float amount);
+	void Damage(const int amount);
 	void SetPosition(float x, float y, float z) { mPosition.x = x; mPosition.y = y; mPosition.z = z;}
 	void SetSize(const float size) { mSize = size; }
 	void Force(float x, float y) { mForce.x = x; mForce.y = y; }
@@ -18,10 +18,10 @@ public:
 	Transform* GetCollider();
 public:
 	bool isDead=false;
+	int mCurrentLife = 0;
 private:
 	Renderer* mRenderer = nullptr;
-	float mLife = PLAYER_HP;
-	float mLifeTime = 0;
+	int mTotalLife = PLAYER_HP;
 	//float mDamageCoolTime = 0;
 	
 

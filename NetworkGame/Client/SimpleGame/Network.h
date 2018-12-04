@@ -11,7 +11,7 @@ public:
 	~Network();
 	bool Initialize(GameScene*);
 	void SendSpawnData(SpawnData& data);
-	void SendExitData(int score, char* name);
+	void SendExitData(int score, int state, char* name);
 	void SendMoveData(MoveData data);
 	void SetIP(const char* iptext);
 
@@ -19,6 +19,7 @@ public:
 	static void DispatchSignal(const int signal, ClientType* clientData);
 	static void ReceiveSpawnData(ClientType* clientData);
 	static void ReceiveMoveData(ClientType* clientData);
+	static void ReceiveExitData(ClientType* clientData);
 private:
 	SOCKADDR_IN mServerAddr;
 	ClientType mClientData;

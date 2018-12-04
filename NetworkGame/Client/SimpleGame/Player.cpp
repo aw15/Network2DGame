@@ -18,7 +18,7 @@ void Player::Render(GLuint texture)
 	//_itoa_s(mLife - mLifeTime, s1, 10);
 	//mRenderer->DrawText(mPosition.x, mPosition.y + mSize / 1.5, GLUT_BITMAP_TIMES_ROMAN_10, 1, 1, 1, s1);
 	mRenderer->DrawTexturedRect(mPosition.x, mPosition.y, mPosition.z, mSize, 1, 1, 1, 1, texture, mLevel);
-	mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (mSize / 2), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mLife - mLifeTime) / mLife, mLevel);
+	mRenderer->DrawSolidRectGauge(mPosition.x, mPosition.y + (mSize / 2), mPosition.z, mSize, 2, mColor.r, mColor.g, mColor.b, mColor.a, (mTotalLife - mCurrentLife) / mTotalLife, mLevel);
 }
 
 void Player::Update()
@@ -44,10 +44,10 @@ void Player::Update()
 	//mForce.y = 0;
 }
 
-void Player::Damage(const float amount)
+void Player::Damage(const int amount)
 {
-	mLifeTime += amount;
-	if (mLife <= mLifeTime)
+	mCurrentLife += amount;
+	if (mTotalLife <= mCurrentLife)
 	{
 		isDead = true;
 	}

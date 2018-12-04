@@ -146,18 +146,16 @@ void GameScene::NetworkAddObject(const SpawnData& spawnData)
 
 void GameScene::NetworkMovePlayer(const MoveData & moveData)
 {
-	moveData.side == mSide ? mPlayer->Force(moveData.forceX, moveData.forceY) : mEnemy->Force(moveData.forceX, moveData.forceY);
+	if (mEnemy->mCurrentLife > moveData.forceY)
+	{
+		cout << "HP error" << endl;
+		mEnemy->mCurrentLife = moveData.forceY;
+	}
+
+
+	moveData.side == mSide ? mPlayer->Force(moveData.forceX, 0) : mEnemy->Force(moveData.forceX,0);
 }
 
-void GameScene::TestAddObject(float x, float y)
-{
-	Transform newPos = { x, y,0 };
-	Object* newObject = nullptr;
-
-	newObject = new Object(mRenderer, newPos, OBJECT_ARCHER, RED_TEAM);
-	newObject->SetDirection({ 0,-1 });
-	mEnemyList.push_back(newObject);
-}
 
 
 
@@ -255,10 +253,8 @@ void GameScene::Update()
 		mState = STATE::GameLose;
 	else if (mEnemy->isDead)
 		mState = STATE::GameWin;
-	if (mState == STATE::GameWin || mState == STATE::GameLose)
-	{
-		mNetwork->SendExitData(mScore, mPlayerName);
-	}
+	
+
 }
 
 void GameScene::Render()
@@ -346,15 +342,19 @@ void GameScene::KeyInput(unsigned char key)
 
 	if (key == 'd')
 	{ 
-		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE,0});
+		mNetwork->SendMoveData(MoveData{ mSide, KEY_FORCE,mPlayer->mCurrentLife});
 	}
 	else if (key == 'a')
 	{
-		mNetwork->SendMoveData(MoveData{mSide, -KEY_FORCE,0 });
+		mNetwork->SendMoveData(MoveData{mSide, -KEY_FORCE,mPlayer->mCurrentLife });
 	}
 	else if (key == 'q')
 	{
 		mState = STATE::GameLose;
+	}
+	else if (key == 'e')
+	{
+		mState = STATE::GameWin;
 	}
 }
 
@@ -363,12 +363,12 @@ void GameScene::KeyUpInput(unsigned char key)
 	if (key == 'd')
 	{
 		//mPlayer->Force(-KEY_FORCE, 0);
-		mNetwork->SendMoveData(MoveData{ mSide, 0,0 });
+		mNetwork->SendMoveData(MoveData{ mSide, 0,mPlayer->mCurrentLife });
 	}
 	else if (key == 'a')
 	{
 		//mPlayer->Force(KEY_FORCE, 0);
-		mNetwork->SendMoveData(MoveData{ mSide, 0, 0 });
+		mNetwork->SendMoveData(MoveData{ mSide, 0, mPlayer->mCurrentLife });
 	}
 }
 

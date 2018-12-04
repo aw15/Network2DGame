@@ -21,7 +21,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 	switch (type)
 	{
 	case OBJECT_ARCHER:
-		mSize = 30;
+		mSize = 80;
 		mMaxHp = 300;
 		mSpeed = { 100,100,0 };
 		mLevel = 0.2;
@@ -29,7 +29,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		mMaxIndex = 10;
 		break;
 	case OBJECT_WARRIOR:
-		mSize = 50;
+		mSize = 100;
 		mMaxHp = 300;
 		mSpeed = { 40,40,0 };
 		mLevel = 0.2f;
@@ -37,7 +37,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		mMaxIndex = 6;
 		break;
 	case OBJECT_MAGE:
-		mSize = 50;
+		mSize = 80;
 		mMaxHp = 300;
 		mSpeed = { 50,50,0 };
 		mLevel = 0.2f;
@@ -68,11 +68,11 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 
 Transform* Object::GetCollider()
 {
-	mCollider[0].x = mPosition.x - (mSize / 2);
-	mCollider[0].y = mPosition.y - (mSize / 2);
+	mCollider[0].x = mPosition.x - (mSize / 1.5);
+	mCollider[0].y = mPosition.y - (mSize / 1.5);
 	mCollider[0].z = 0;
-	mCollider[1].x = mPosition.x + (mSize / 2);
-	mCollider[1].y = mPosition.y + (mSize / 2);
+	mCollider[1].x = mPosition.x + (mSize / 1.5);
+	mCollider[1].y = mPosition.y + (mSize / 1.5);
 	mCollider[1].z = 0;
 	return mCollider;
 }

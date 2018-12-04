@@ -41,6 +41,9 @@ void Network::DispatchSignal(const int signal, ClientType* clientData)
 	case SIGNAL_MOVE:
 		Network::ReceiveMoveData(clientData);
 		break;
+	case SIGNAL_EXIT:
+		ReceiveExitData(clientData);
+		break;
 	}
 }
 
@@ -88,6 +91,19 @@ void Network::ReceiveMoveData(ClientType* clientData)
 			break;
 		}
 	}
+}
+
+void Network::ReceiveExitData(ClientType * clientData)
+{
+
+	int state = 0;
+	int retval = recvn(clientData->socket, (char*)&state, sizeof(state), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn recv socket error\n");
+		return;
+	}
+	mSceneManagerForNetwork->SetState(state);
 }
 
 Network::Network()
@@ -183,7 +199,7 @@ void Network::SendSpawnData(SpawnData& data)
 	return;
 }
 
-void Network::SendExitData(int score,char* name)
+void Network::SendExitData(int score, int state, char* name)
 {
 	int signal = htonl(SIGNAL_EXIT);
 	int retval = 0;
@@ -200,6 +216,13 @@ void Network::SendExitData(int score,char* name)
 		printf("spawn send socket error\n");
 		return;
 	}
+	retval = send(mClientData.socket, (char*)&state, sizeof(state), 0);
+	if (retval == SOCKET_ERROR)
+	{
+		printf("spawn send socket error\n");
+		return;
+	}
+
 	retval = send(mClientData.socket, (char*)name, NAME_BUFSIZE, 0);
 	if (retval == SOCKET_ERROR)
 	{

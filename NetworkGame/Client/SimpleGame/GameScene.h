@@ -13,7 +13,7 @@ public:
 	bool Initialize();
 
 	void AddObject(float x, float y);
-	void TestAddObject(float x, float y);
+	void SendExitData(){ mNetwork->SendExitData(mScore, mState ,mPlayerName); }
 
 	void NetworkAddObject(const SpawnData& spawnData);
 	void NetworkMovePlayer(const MoveData& moveData);
@@ -28,6 +28,7 @@ public:
 	//SET//////////////////////////////
 	void SetTeam(const int side) { mSide = side; }
 	void SetName(const char* name) { strcpy(mPlayerName, name); }
+	void SetState(const int state) { state == STATE::GameWin ? mState = STATE::GameLose : mState = STATE::GameWin; }
 	//GET//////////////////////////////
 	STATE GetState();
 	int GetScore() { return mScore; }
