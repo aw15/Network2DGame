@@ -32,7 +32,7 @@ public:
 	void DeleteArrow();
 	//--------------------업데이트-----------------------------------------------------------
 	virtual void Render(GLuint texture,GLuint);
-	virtual void Update();
+	virtual void Update(float eTime);
 
 
 private:

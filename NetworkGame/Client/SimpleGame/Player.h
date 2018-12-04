@@ -6,7 +6,7 @@ public:
 	~Player();
 
 	virtual void Render(GLuint texture);
-	virtual void Update();
+	virtual void Update(float eTime);
 public:
 	//-------------------------------¼¼Æ®--------------------------------------------------------
 	void Damage(const int amount);

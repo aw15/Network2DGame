@@ -21,7 +21,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 	switch (type)
 	{
 	case OBJECT_ARCHER:
-		mSize = 80;
+		mSize = 50;
 		mMaxHp = 300;
 		mSpeed = { 100,100,0 };
 		mLevel = 0.2;
@@ -37,7 +37,7 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		mMaxIndex = 6;
 		break;
 	case OBJECT_MAGE:
-		mSize = 80;
+		mSize = 60;
 		mMaxHp = 300;
 		mSpeed = { 50,50,0 };
 		mLevel = 0.2f;
@@ -157,7 +157,7 @@ void Object::Render(GLuint texture,GLuint particle)
 		arrow->Render(particle);
 	
 }
-void Object::Update()
+void Object::Update(float eTime)
 {
 	//if (mArrowSpawnTime >= mArrowSpawnCoolTime)
 	//{
@@ -171,9 +171,9 @@ void Object::Update()
 	mAnimationIndex += TIME_FREQUENCY * 10;
 	
 
-	mPosition.x += mDirection.x*(mSpeed.x*TIME_FREQUENCY);
-	mPosition.y += mDirection.y*(mSpeed.y*TIME_FREQUENCY);
-	mPosition.z += mDirection.z*(mSpeed.z*TIME_FREQUENCY);
+	mPosition.x += mDirection.x*(mSpeed.x*eTime);
+	mPosition.y += mDirection.y*(mSpeed.y*eTime);
+	mPosition.z += mDirection.z*(mSpeed.z*eTime);
 
 	if (mPosition.y >= (HEIGHT / 2 - 10))
 	{
@@ -198,12 +198,6 @@ void Object::Update()
 		isDead = true;
 	/*	mPosition.y = -(HEIGHT / 2 - 10);
 		mDirection.y *= -1;*/
-	}
-
-
-	for (auto arrow : mArrowList)
-	{
-		arrow->Update();
 	}
 
 }

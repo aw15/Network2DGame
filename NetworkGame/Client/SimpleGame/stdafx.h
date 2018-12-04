@@ -39,15 +39,15 @@
 #define RED_TEAM 1
 #define BLUE_TEAM 2
 
-#define SPAWN_COOLTIME 1.0f
+#define SPAWN_COOLTIME 0.7f
 #define SOUND_COOLTIME 1.0f
 #define ARROW_SPAWNTIME 1.0f
 
 //#define DAMAGE_COOLTIME 1.0f
 #define DAMAGE 100
-#define PLAYER_HP 200
+#define PLAYER_HP 500
 
-#define KEY_FORCE 1
+#define KEY_FORCE 60
 #define GRAVITY 9.8f
 #define FRICTION_COEF 2.0f
 

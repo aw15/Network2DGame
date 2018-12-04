@@ -146,12 +146,14 @@ void GameScene::NetworkAddObject(const SpawnData& spawnData)
 
 void GameScene::NetworkMovePlayer(const MoveData & moveData)
 {
-	if (mEnemy->mCurrentLife > moveData.forceY)
+	if (moveData.side == mSide &&  mPlayer->mCurrentLife < moveData.forceY)
 	{
-		cout << "HP error" << endl;
+		mPlayer->mCurrentLife = moveData.forceY;
+	}
+	if (moveData.side != mSide && mEnemy->mCurrentLife < moveData.forceY)
+	{
 		mEnemy->mCurrentLife = moveData.forceY;
 	}
-
 
 	moveData.side == mSide ? mPlayer->Force(moveData.forceX, 0) : mEnemy->Force(moveData.forceX,0);
 }
@@ -226,29 +228,28 @@ void GameScene::Update()
 	TimePoint currTime = Time::now();
 	float elapsedTime = TimeDuration(currTime - mPrevTime).count();//현재시간 - 이전시간으로 시간차를 구한다.
 	mPrevTime = currTime;
-	mTimeAccumulator += elapsedTime;
+	//mTimeAccumulator += elapsedTime;
 	//	m_soundTime += elapsedTime;//소리가 계속 나면 안되니까 쿨타임
 	mSpawnTime += elapsedTime;//유닛 생성을 위한 쿨타임
 
-	while (mTimeAccumulator > TIME_FREQUENCY)
-	{
-		for (auto object : mAllyList)
-		{
-			if (object->GetType() != OBJECT_BUILDING)
-				object->Update();//업데이트
-		}
-		for (auto object : mEnemyList)
-		{
-			if (object->GetType() != OBJECT_BUILDING)
-				object->Update();//업데이트
-		}
-		mPlayer->Update();
-		mEnemy->Update();
 
-		mTimeAccumulator -= TIME_FREQUENCY;
-		CollisionCheck();
-		DeleteDeadObject();//죽은 애들 지우기
+	for (auto object : mAllyList)
+	{
+		if (object->GetType() != OBJECT_BUILDING)
+			object->Update(elapsedTime);//업데이트
 	}
+	for (auto object : mEnemyList)
+	{
+		if (object->GetType() != OBJECT_BUILDING)
+			object->Update(elapsedTime);//업데이트
+	}
+	mPlayer->Update(elapsedTime);
+	mEnemy->Update(elapsedTime);
+
+	mTimeAccumulator -= TIME_FREQUENCY;
+	CollisionCheck();
+	DeleteDeadObject();//죽은 애들 지우기
+
 	if (mPlayer->isDead)
 		mState = STATE::GameLose;
 	else if (mEnemy->isDead)
