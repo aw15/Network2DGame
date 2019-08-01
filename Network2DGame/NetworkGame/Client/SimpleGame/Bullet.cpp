@@ -34,13 +34,13 @@ Bullet::Bullet(Renderer * renderer, const Transform & pos, int type, int team, T
 	case OBJECT_BULLET:
 		mSize = 4;
 		mLife = 15;
-		mSpeed = { 100,100,0 };
+		mSpeed = { 70,70,0 };
 		mLevel = 0.3f;
 		break;
 	case OBJECT_ARROW:
 		mSize = 4;
 		mLife = 10;
-		mSpeed = { 100,100,0 };
+		mSpeed = { 70,70,0 };
 		mLevel = 0.4;
 		break;
 	}
@@ -52,7 +52,7 @@ Bullet::~Bullet()
 
 void Bullet::Render(GLuint particle)
 {
-	if (mType == OBJECT_BULLET)
+	if (mType == OBJECT_BULLET || mType == OBJECT_ARROW)
 		mRenderer->DrawParticle(mTransform.x, mTransform.y, mTransform.z, 7, 1, 1, 1, 1, -mDirection.x, -mDirection.y, particle, mParticleIndex, mLevel + 0.1f);
 	else
 		mRenderer->DrawSolidRect(mTransform.x, mTransform.y, mTransform.z, mSize, mColor.r, mColor.g, mColor.b, mColor.a, mLevel);

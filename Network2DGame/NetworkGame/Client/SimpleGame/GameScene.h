@@ -37,6 +37,9 @@ public:
 	void KeyUpInput(unsigned char key);
 	void MouseInput(int button, int state, int x, int y);
 
+	//void EnemyBulletCheck(Object* object);
+	//void AllyBulletCheck(Object* object);
+
 private:
 	GLuint mPlayerTex;
 	GLuint mEnemyTex;

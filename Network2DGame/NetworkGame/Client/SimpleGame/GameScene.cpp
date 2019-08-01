@@ -36,10 +36,10 @@ GameScene::GameScene(Renderer* renderer , Network* network)
 	mRenderer->CreatePngTexture("./Resource/flare2.png","Particle2");//파티클
 
 
-
-	mSound = new Sound();
-	auto soundBG = mSound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
-	mSound->PlaySound(soundBG, true, 0.2f);
+	//배경음악.
+	//mSound = new Sound();
+//	auto soundBG = mSound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
+	//mSound->PlaySound(soundBG, true, 0.2f);
 }
 
 
@@ -228,25 +228,30 @@ void GameScene::Update()
 	TimePoint currTime = Time::now();
 	float elapsedTime = TimeDuration(currTime - mPrevTime).count();//현재시간 - 이전시간으로 시간차를 구한다.
 	mPrevTime = currTime;
-	//mTimeAccumulator += elapsedTime;
+	mTimeAccumulator += elapsedTime;
 	//	m_soundTime += elapsedTime;//소리가 계속 나면 안되니까 쿨타임
 	mSpawnTime += elapsedTime;//유닛 생성을 위한 쿨타임
-
-
-	for (auto object : mAllyList)
+	
+	
+	while (mTimeAccumulator > TIME_FREQUENCY)
 	{
-		if (object->GetType() != OBJECT_BUILDING)
-			object->Update(elapsedTime);//업데이트
-	}
-	for (auto object : mEnemyList)
-	{
-		if (object->GetType() != OBJECT_BUILDING)
-			object->Update(elapsedTime);//업데이트
-	}
-	mPlayer->Update(elapsedTime);
-	mEnemy->Update(elapsedTime);
+		for (auto object : mAllyList)
+		{
+			if (object->GetType() != OBJECT_BUILDING)
+				object->Update(elapsedTime);//업데이트
+		}
+		for (auto object : mEnemyList)
+		{
+			if (object->GetType() != OBJECT_BUILDING)
+				object->Update(elapsedTime);//업데이트
+		}
+		mPlayer->Update(elapsedTime);
+		mEnemy->Update(elapsedTime);
 
-	mTimeAccumulator -= TIME_FREQUENCY;
+		mTimeAccumulator -= TIME_FREQUENCY;
+	}
+
+
 	CollisionCheck();
 	DeleteDeadObject();//죽은 애들 지우기
 

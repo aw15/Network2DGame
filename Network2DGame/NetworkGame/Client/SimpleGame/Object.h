@@ -15,7 +15,7 @@ public:
 	~Object();
 	//-------------------------------¼¼Æ®--------------------------------------------------------
 	void SetSpeed(const Transform speed) { mSpeed = speed; };
-//	void Damage(const float amount);
+	void Damage(const float amount);
 	void SetPosition(const Transform& pos) { mPosition = pos;}
 	void SetSize(const float size) { mSize = size; }
 	void SetDirection(const Transform& dir) { mDirection = dir; }

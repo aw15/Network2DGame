@@ -24,8 +24,8 @@ void Player::Render(GLuint texture)
 void Player::Update(float eTime)
 {
 	
-	mPosition.x += mForce.x*eTime;
-	mPosition.y += mForce.y*eTime;
+	mPosition.x += mForce.x*TIME_FREQUENCY;
+	mPosition.y += mForce.y*TIME_FREQUENCY;
 
 
 
@@ -36,8 +36,8 @@ void Player::Update(float eTime)
 		)
 	{
 
-		mPosition.x -= mForce.x*eTime;
-		mPosition.y -= mForce.y*eTime;
+		mPosition.x -= mForce.x*TIME_FREQUENCY;
+		mPosition.y -= mForce.y*TIME_FREQUENCY;
 	}
 
 	//mForce.x = 0;

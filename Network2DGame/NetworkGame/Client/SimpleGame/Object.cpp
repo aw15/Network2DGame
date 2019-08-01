@@ -23,9 +23,9 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 	case OBJECT_ARCHER:
 		mSize = 50;
 		mMaxHp = 300;
-		mSpeed = { 100,100,0 };
+		mSpeed = { 30,30,0 };
 		mLevel = 0.2;
-		mArrowSpawnCoolTime = 1;
+		mArrowSpawnCoolTime = 3;
 		mMaxIndex = 10;
 		break;
 	case OBJECT_WARRIOR:
@@ -33,19 +33,21 @@ Object::Object(Renderer* renderer, const Transform& pos, int type,int team)
 		mMaxHp = 300;
 		mSpeed = { 40,40,0 };
 		mLevel = 0.2f;
-		mArrowSpawnCoolTime = 1;
+		mArrowSpawnCoolTime = 3;
 		mMaxIndex = 6;
 		break;
 	case OBJECT_MAGE:
 		mSize = 60;
 		mMaxHp = 300;
-		mSpeed = { 50,50,0 };
+		mSpeed = { 30,30,0 };
 		mLevel = 0.2f;
 		mMaxIndex = 7;
 		mArrowSpawnCoolTime = 3;
 		break;
 	}
 
+
+	mArrowSpawnTime = mArrowSpawnCoolTime;
 
 	
 }
@@ -81,7 +83,7 @@ void Object::MakeArrow()
 {
 		isFired = true;
 		mArrowSpawnTime = 0;
-
+		
 		Transform parent = mPosition;
 
 		Bullet* newBullet;
@@ -90,14 +92,18 @@ void Object::MakeArrow()
 		{
 			for (int i = 0; i < 360; i += 30)
 			{
-				Transform temp = { cos(i*(3.1415/180)),sin(i*(3.1415 / 180)),0 };
-				newBullet = new Bullet(mRenderer, parent,  OBJECT_BULLET, mTeam, &temp);
+				Transform temp = { cos(i*(3.1415 / 180)),sin(i*(3.1415 / 180)),0 };
+				newBullet = new Bullet(mRenderer, parent, OBJECT_BULLET, mTeam, &temp);
 				mArrowList.push_back(newBullet);
 			}
 		}
-		else if(mType == OBJECT_ARCHER)
+		else if (mType == OBJECT_ARCHER)
 		{
-			newBullet = new Bullet(mRenderer, parent,  OBJECT_ARROW, mTeam);
+			
+			Transform temp;
+			//if(mTeam = RED_TEAM)
+				temp = { rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, 0 };
+			newBullet = new Bullet(mRenderer, parent,  OBJECT_ARROW, mTeam, &temp);
 			mArrowList.push_back(newBullet);
 		}
 }
@@ -159,21 +165,24 @@ void Object::Render(GLuint texture,GLuint particle)
 }
 void Object::Update(float eTime)
 {
-	//if (mArrowSpawnTime >= mArrowSpawnCoolTime)
-	//{
-	//	MakeArrow();
-	//}
-	//else if (mType != OBJECT_WARRIOR)
-	//{
-	//	mArrowSpawnTime += TIME_FREQUENCY;
-	//}
+	//cout << mArrowSpawnTime << "  " << mArrowSpawnCoolTime << endl;
+	if (mArrowSpawnTime >= mArrowSpawnCoolTime)
+	{
+		//mArrowSpawnTime = 0;
+		//std::cout << mArrowSpawnTime<< endl;
+		MakeArrow();
+	}
+	else if (mType != OBJECT_WARRIOR)
+	{
+		mArrowSpawnTime += TIME_FREQUENCY;
+	}
 
-	mAnimationIndex += TIME_FREQUENCY * 10;
+	mAnimationIndex += TIME_FREQUENCY*10;
 	
 
-	mPosition.x += mDirection.x*(mSpeed.x*eTime);
-	mPosition.y += mDirection.y*(mSpeed.y*eTime);
-	mPosition.z += mDirection.z*(mSpeed.z*eTime);
+	mPosition.x += mDirection.x*(mSpeed.x*TIME_FREQUENCY);
+	mPosition.y += mDirection.y*(mSpeed.y*TIME_FREQUENCY);
+	mPosition.z += mDirection.z*(mSpeed.z*TIME_FREQUENCY);
 
 	if (mPosition.y >= (HEIGHT / 2 - 10))
 	{
@@ -200,6 +209,8 @@ void Object::Update(float eTime)
 		mDirection.y *= -1;*/
 	}
 
+	for (const auto& arrow : mArrowList)
+		arrow->Update();
 }
 
 
